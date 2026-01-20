@@ -70,150 +70,20 @@ class HomePage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Top Navigation Bar
-          Row(
-            children: [
-              // Hamburger Menu (เส้นกลางเป็นสีส้ม-เหลือง)
-              Builder(
-                builder: (scaffoldContext) => GestureDetector(
-                  onTap: () {
-                    try {
-                      Scaffold.of(scaffoldContext).openDrawer();
-                    } catch (e) {
-                      // Drawer ยังไม่ได้สร้าง
-                    }
-                  },
-                  child: Container(
-                    width: 29,
-                    height: 20,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.starrt,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          width: 23, // ยาวเต็มความกว้าง
-                          height: 2.5,
-                          decoration: BoxDecoration(
-                            color: AppColors.textOnPrimary,
-                            borderRadius: BorderRadius.circular(1.5),
-                          ),
-                        ),
-                        Container(
-                          width: 29, // สั้นมาก (ประมาณ 40% ของเส้นบน/ล่าง)
-                          height: 2.5,
-                          decoration: BoxDecoration(
-                            color: AppColors.accent, // สีส้ม-เหลือง
-                            borderRadius: BorderRadius.circular(1.5),
-                          ),
-                        ),
-                        Container(
-                          width: 12.5, // ยาวเต็มความกว้าง
-                          height: 2.5,
-                          decoration: BoxDecoration(
-                            color: AppColors.textOnPrimary,
-                            borderRadius: BorderRadius.circular(1.5),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              
-              const SizedBox(width: 12),
-              
-              // Search Bar (มุมโค้งมนมาก, พื้นหลังสีเขียวอ่อน)
-              Expanded(
-                child: Container(
-                  height: 44,
-                  decoration: BoxDecoration(
-                    color: AppColors.primaryLight.withOpacity(0.3), // สีเขียวอ่อน
-                    borderRadius: BorderRadius.circular(22), // มุมโค้งมนมาก
-                    border: Border.all(
-                      color: AppColors.textOnPrimary.withOpacity(0.1),
-                      width: 1,
-                    ),
-                  ),
-                  child: Row(
-                    children: [
-                      const SizedBox(width: 16),
-                      const Icon(
-                        Icons.search,
-                        color: AppColors.textOnPrimary,
-                        size: 20,
-                      ),
-                      const Spacer(),
-                      GestureDetector(
-                        onTap: () {},
-                        child: const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Icon(
-                            Icons.qr_code_scanner,
-                            color: AppColors.textOnPrimary,
-                            size: 20,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                    ],
-                  ),
-                ),
-              ),
-              
-              const SizedBox(width: 12),
-              
-              // Notification Icon (สีส้ม-เหลือง)
-              Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  IconButton(
-                    icon: Icon(
-                      Icons.chat_bubble_outline,
-                      color: AppColors.accent, // สีส้ม-เหลือง
-                      size: 24,
-                    ),
-                    padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(),
-                    onPressed: () {},
-                  ),
-                  Positioned(
-                    right: 2,
-                    top: 2,
-                    child: Container(
-                      width: 18,
-                      height: 18,
-                      decoration: const BoxDecoration(
-                        color: AppColors.accent, // สีส้ม-เหลือง
-                        shape: BoxShape.circle,
-                      ),
-                      child: Center(
-                        child: Text(
-                          '1',
-                          style: AppTextStyles.caption.copyWith(
-                            color: AppColors.textOnPrimary,
-                            fontSize: 10,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              
-              const SizedBox(width: 8),
-              
-              // Cart Icon (สีเทา-ม่วงอ่อน)
-              IconButton(
-                icon: const Icon(
-                  Icons.shopping_cart_outlined,
-                  color: AppColors.cartIcon, // สีเทา-ม่วงอ่อน
-                  size: 24,
-                ),
-                padding: EdgeInsets.zero,
-                constraints: const BoxConstraints(),
-                onPressed: () {},
-              ),
-            ],
+          TlzAppTopBar(
+            notificationCount: 1,
+            onMenuPressed: () {
+              // Navigation logic handled by TlzHamburgerMenu
+            },
+            onQRTap: () {
+              // TODO: Navigate to QR scanner
+            },
+            onNotificationTap: () {
+              // TODO: Navigate to notifications
+            },
+            onCartTap: () {
+              // TODO: Navigate to cart
+            },
           ),
           
           const SizedBox(height: 16),
