@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'core/theme/app_theme.dart';
+import 'core/widgets/iphone_16_pro_wrapper.dart';
 import 'features/home/presentation/pages/home_page.dart';
 // import 'services/supabase_service.dart';
 
@@ -39,6 +40,12 @@ class TreeLawZooApp extends StatelessWidget {
       title: 'Tree Law Zoo',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
+      builder: (context, child) {
+        // Wrap all pages with iPhone 16 Pro size wrapper
+        return IPhone16ProWrapper(
+          child: child ?? const SizedBox(),
+        );
+      },
       home: const HomePage(),
     );
   }

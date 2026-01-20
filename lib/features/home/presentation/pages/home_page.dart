@@ -1,10 +1,11 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_text_styles.dart';
 import '../../../../shared/widgets/widgets.dart';
 
-/// Home Page - "ช่องทางธรรมชาติ"
-/// Main menu for Tree Law Zoo
+/// Home Page - Medical App Design
+/// Main dashboard for health/medical services
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
@@ -13,271 +14,848 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              // Header with Logo
-              _buildHeader(),
-              
-              const SizedBox(height: 24),
-              
-              // Main Menu Grid
-              _buildMainMenu(context),
-              
-              const SizedBox(height: 24),
-              
-              // Accommodation Button
-              _buildAccommodationButton(context),
-              
-              const SizedBox(height: 32),
-              
-              // Bottom Links
-              _buildBottomLinks(context),
-              
-              const SizedBox(height: 32),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildHeader() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 24),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            AppColors.primary,
-            AppColors.primaryLight.withOpacity(0.8),
+        child: Column(
+          children: [
+            // Header with Search Bar
+            _buildHeader(context),
+            
+            // Main Content
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    const SizedBox(height: 16),
+                    
+                    // Consultation Widget
+                    _buildConsultationWidget(context),
+                    
+                    const SizedBox(height: 24),
+                    
+                    // Pharmacy Near You Card
+                    _buildPharmacyCard(context),
+                    
+                    const SizedBox(height: 24),
+                    
+                    // Recommended by Experts Section
+                    _buildRecommendedSection(context),
+                    
+                    const SizedBox(height: 24),
+                    
+                    // Interesting Section
+                    _buildInterestingSection(context),
+                    
+                    const SizedBox(height: 32),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
-        borderRadius: const BorderRadius.only(
-          bottomLeft: Radius.circular(32),
-          bottomRight: Radius.circular(32),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.primary.withOpacity(0.3),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          const TlzLogo(
-            size: 1.0,
-            showSubtitle: true,
-            isDark: true,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'ช่องทางธรรมชาติ',
-            style: AppTextStyles.heading4.copyWith(
-              color: AppColors.textOnPrimary,
-            ),
-          ),
-        ],
       ),
     );
   }
 
-  Widget _buildMainMenu(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Column(
-        children: [
-          // Row 1: สั่งอาหาร & จองโต๊ะ
-          Row(
-            children: [
-              Expanded(
-                child: TlzMenuCard(
-                  title: 'สั่งอาหาร',
-                  icon: Icons.restaurant_menu,
-                  iconColor: AppColors.primary,
-                  onTap: () {
-                    _showComingSoon(context, 'สั่งอาหาร');
-                  },
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: TlzMenuCard(
-                  title: 'จองโต๊ะ',
-                  icon: Icons.table_restaurant,
-                  iconColor: AppColors.secondary,
-                  onTap: () {
-                    _showComingSoon(context, 'จองโต๊ะ');
-                  },
-                ),
-              ),
-            ],
-          ),
-          
-          const SizedBox(height: 12),
-          
-          // Row 2: ติดตามคิว & ข้อมูลการจองโต๊ะ
-          Row(
-            children: [
-              Expanded(
-                child: TlzMenuCard(
-                  title: 'ติดตามคิว',
-                  icon: Icons.access_time,
-                  iconColor: AppColors.queueCooking,
-                  onTap: () {
-                    _showComingSoon(context, 'ติดตามคิว');
-                  },
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: TlzMenuCard(
-                  title: 'ข้อมูลการจองโต๊ะ',
-                  icon: Icons.event_note,
-                  iconColor: AppColors.info,
-                  onTap: () {
-                    _showComingSoon(context, 'ข้อมูลการจองโต๊ะ');
-                  },
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildAccommodationButton(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: () {
-            _showComingSoon(context, 'จองที่พัก');
-          },
-          borderRadius: BorderRadius.circular(16),
-          child: Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              gradient: AppColors.valleyGradient,
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.valley.withOpacity(0.3),
-                  blurRadius: 12,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: AppColors.textOnPrimary.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: const Icon(
-                    Icons.hotel,
-                    size: 32,
-                    color: AppColors.textOnPrimary,
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Text(
-                  'จองที่พัก',
-                  style: AppTextStyles.heading4.copyWith(
-                    color: AppColors.textOnPrimary,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildBottomLinks(BuildContext context) {
+  Widget _buildHeader(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
+      width: double.infinity,
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 20),
+      decoration: BoxDecoration(
+        color: AppColors.primary,
+        borderRadius: const BorderRadius.only(
+          bottomLeft: Radius.circular(24),
+          bottomRight: Radius.circular(24),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Top Navigation Bar
+          Row(
+            children: [
+              // Hamburger Menu (เส้นกลางเป็นสีส้ม-เหลือง)
+              Builder(
+                builder: (scaffoldContext) => GestureDetector(
+                  onTap: () {
+                    try {
+                      Scaffold.of(scaffoldContext).openDrawer();
+                    } catch (e) {
+                      // Drawer ยังไม่ได้สร้าง
+                    }
+                  },
+                  child: Container(
+                    width: 29,
+                    height: 20,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.starrt,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          width: 23, // ยาวเต็มความกว้าง
+                          height: 2.5,
+                          decoration: BoxDecoration(
+                            color: AppColors.textOnPrimary,
+                            borderRadius: BorderRadius.circular(1.5),
+                          ),
+                        ),
+                        Container(
+                          width: 29, // สั้นมาก (ประมาณ 40% ของเส้นบน/ล่าง)
+                          height: 2.5,
+                          decoration: BoxDecoration(
+                            color: AppColors.accent, // สีส้ม-เหลือง
+                            borderRadius: BorderRadius.circular(1.5),
+                          ),
+                        ),
+                        Container(
+                          width: 12.5, // ยาวเต็มความกว้าง
+                          height: 2.5,
+                          decoration: BoxDecoration(
+                            color: AppColors.textOnPrimary,
+                            borderRadius: BorderRadius.circular(1.5),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              
+              const SizedBox(width: 12),
+              
+              // Search Bar (มุมโค้งมนมาก, พื้นหลังสีเขียวอ่อน)
+              Expanded(
+                child: Container(
+                  height: 44,
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryLight.withOpacity(0.3), // สีเขียวอ่อน
+                    borderRadius: BorderRadius.circular(22), // มุมโค้งมนมาก
+                    border: Border.all(
+                      color: AppColors.textOnPrimary.withOpacity(0.1),
+                      width: 1,
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      const SizedBox(width: 16),
+                      const Icon(
+                        Icons.search,
+                        color: AppColors.textOnPrimary,
+                        size: 20,
+                      ),
+                      const Spacer(),
+                      GestureDetector(
+                        onTap: () {},
+                        child: const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Icon(
+                            Icons.qr_code_scanner,
+                            color: AppColors.textOnPrimary,
+                            size: 20,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                    ],
+                  ),
+                ),
+              ),
+              
+              const SizedBox(width: 12),
+              
+              // Notification Icon (สีส้ม-เหลือง)
+              Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  IconButton(
+                    icon: Icon(
+                      Icons.chat_bubble_outline,
+                      color: AppColors.accent, // สีส้ม-เหลือง
+                      size: 24,
+                    ),
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                    onPressed: () {},
+                  ),
+                  Positioned(
+                    right: 2,
+                    top: 2,
+                    child: Container(
+                      width: 18,
+                      height: 18,
+                      decoration: const BoxDecoration(
+                        color: AppColors.accent, // สีส้ม-เหลือง
+                        shape: BoxShape.circle,
+                      ),
+                      child: Center(
+                        child: Text(
+                          '1',
+                          style: AppTextStyles.caption.copyWith(
+                            color: AppColors.textOnPrimary,
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              
+              const SizedBox(width: 8),
+              
+              // Cart Icon (สีเทา-ม่วงอ่อน)
+              IconButton(
+                icon: const Icon(
+                  Icons.shopping_cart_outlined,
+                  color: AppColors.cartIcon, // สีเทา-ม่วงอ่อน
+                  size: 24,
+                ),
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+                onPressed: () {},
+              ),
+            ],
+          ),
+          
+          const SizedBox(height: 16),
+          
+          // Content Row
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Left Side: Status Text & Profile Picture
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'สุขภาพ "ดี"',
+                      style: AppTextStyles.bodyLarge.copyWith(
+                        color: AppColors.textOnPrimary,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    // Profile Picture Placeholder
+                    Container(
+                      width: 60,
+                      height: 60,
+                      decoration: BoxDecoration(
+                        color: AppColors.textOnPrimary,
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: AppColors.textOnPrimary,
+                          width: 2,
+                        ),
+                      ),
+                      child: const Icon(
+                        Icons.person,
+                        color: AppColors.primary,
+                        size: 36,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              
+              // Right Side: Medicine Reminder & Popular Badge
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    'อีก 10 นาที\nทานยา',
+                    textAlign: TextAlign.right,
+                    style: AppTextStyles.bodySmall.copyWith(
+                      color: AppColors.textOnPrimary,
+                      height: 1.4,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: AppColors.textOnPrimary.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      'ได้รับความนิยม',
+                      style: AppTextStyles.caption.copyWith(
+                        color: AppColors.textOnPrimary,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildConsultationWidget(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          // Outer Solid Green Ring - วงแหวนสีเขียวทึบด้านนอก
+          SizedBox(
+            width: 280,
+            height: 280,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                // Solid Green Circle (outer ring)
+                Container(
+                  width: 280,
+                  height: 280,
+                  decoration: BoxDecoration(
+                    color: AppColors.primary, // สีเขียว #71BE0A
+                    shape: BoxShape.circle,
+                  ),
+                ),
+                // White Circle (inner cutout)
+                Container(
+                  width: 240,
+                  height: 240,
+                  decoration: const BoxDecoration(
+                    color: AppColors.backgroundWhite,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+                // Green Dots on Ring (top right และ bottom left)
+                Positioned(
+                  right: 0,
+                  top: 20,
+                  child: Container(
+                    width: 16,
+                    height: 16,
+                    decoration: BoxDecoration(
+                      color: AppColors.primary,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                ),
+                Positioned(
+                  left: 0,
+                  bottom: 20,
+                  child: Container(
+                    width: 16,
+                    height: 16,
+                    decoration: BoxDecoration(
+                      color: AppColors.primary,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          
+          // Inner Circle Background - White
+          Container(
+            width: 240,
+            height: 240,
+            decoration: const BoxDecoration(
+              color: AppColors.backgroundWhite, // สีขาว
+              shape: BoxShape.circle,
+            ),
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                // Inner Dotted Line - เส้นประสีเทาอ่อนด้านใน
+                SizedBox(
+                  width: 220,
+                  height: 220,
+                  child: CustomPaint(
+                    painter: DottedCirclePainter(
+                      color: AppColors.textHint.withOpacity(0.3), // สีเทาอ่อน
+                      strokeWidth: 1.5,
+                      dashWidth: 4,
+                      dashSpace: 3,
+                    ),
+                  ),
+                ),
+                
+                // Content
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // Stethoscope Icon (สีดำ, ไม่มี background circle)
+                    const Icon(
+                      Icons.medical_services,
+                      size: 56,
+                      color: AppColors.textPrimary, // สีดำ
+                    ),
+                    
+                    const SizedBox(height: 16),
+                    
+                    // Title "ปรึกษา" (สีดำ, ตัวหนา)
+                    Text(
+                      'ปรึกษา',
+                      style: AppTextStyles.heading3.copyWith(
+                        color: AppColors.textPrimary,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    
+                    const SizedBox(height: 6),
+                    
+                    // Subtitle "แพทย์ & เภสัช" ("&" สีเทา)
+                    RichText(
+                      textAlign: TextAlign.center,
+                      text: TextSpan(
+                        style: AppTextStyles.bodyMedium.copyWith(
+                          color: AppColors.textPrimary,
+                        ),
+                        children: [
+                          const TextSpan(text: 'แพทย์ '),
+                          TextSpan(
+                            text: '&',
+                            style: AppTextStyles.bodyMedium.copyWith(
+                              color: AppColors.textSecondary, // "&" สีเทา
+                            ),
+                          ),
+                          const TextSpan(text: ' เภสัช'),
+                        ],
+                      ),
+                    ),
+                    
+                    const SizedBox(height: 12),
+                    
+                    // Status "พร้อมให้บริการขณะนี้" (สีเทา)
+                    Text(
+                      'พร้อมให้บริการขณะนี้',
+                      style: AppTextStyles.caption.copyWith(
+                        color: AppColors.textSecondary, // สีเทา
+                      ),
+                    ),
+                    
+                    const SizedBox(height: 8),
+                    
+                    // Count "20 ราย" (สีเทา, มีจุดสีเขียว)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: 8,
+                          height: 8,
+                          decoration: BoxDecoration(
+                            color: AppColors.primary, // จุดสีเขียว
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+                        Text(
+                          '20 ราย',
+                          style: AppTextStyles.bodySmall.copyWith(
+                            color: AppColors.textSecondary, // สีเทา
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPharmacyCard(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.shadow,
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            // Icon (สีดำตาม design)
+            Container(
+              width: 60,
+              height: 60,
+              decoration: BoxDecoration(
+                color: AppColors.background,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: const Icon(
+                Icons.local_pharmacy,
+                size: 32,
+                color: AppColors.textPrimary, // สีดำตาม design
+              ),
+            ),
+            
+            const SizedBox(width: 16),
+            
+            // Content
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'ร้านยาใกล้คุณ',
+                    style: AppTextStyles.heading5.copyWith(
+                      color: AppColors.textPrimary,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'จัดส่งภายใน 10 นาที',
+                    style: AppTextStyles.bodySmall.copyWith(
+                      color: AppColors.textSecondary,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'คลินิก / นวดสปา / ฟิสเนส',
+                    style: AppTextStyles.caption.copyWith(
+                      color: AppColors.textHint,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            
+            // Search Button
+            ElevatedButton(
+              onPressed: () {},
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.surface,
+                foregroundColor: AppColors.primary,
+                side: const BorderSide(color: AppColors.border),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              child: Text(
+                'ค้นหา',
+                style: AppTextStyles.buttonSmall.copyWith(
+                  color: AppColors.primary,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRecommendedSection(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Section Header
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'แนะนำโดยผู้เชี่ยวชาญ',
+                style: AppTextStyles.heading5.copyWith(
+                  color: AppColors.textPrimary,
+                ),
+              ),
+              TextButton(
+                onPressed: () {},
+                child: Text(
+                  'เพิ่มเติม',
+                  style: AppTextStyles.bodySmall.copyWith(
+                    color: AppColors.primary,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        
+        const SizedBox(height: 12),
+        
+        // Horizontal Scrollable List
+        SizedBox(
+          height: 200,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            itemCount: 5,
+            itemBuilder: (context, index) {
+              return Container(
+                width: 160,
+                margin: const EdgeInsets.only(right: 12),
+                decoration: BoxDecoration(
+                  color: AppColors.surface,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: AppColors.border),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.shadow,
+                      blurRadius: 4,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Placeholder Image
+                    Container(
+                      height: 120,
+                      decoration: BoxDecoration(
+                        color: AppColors.background,
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(12),
+                          topRight: Radius.circular(12),
+                        ),
+                      ),
+                      child: const Icon(
+                        Icons.image,
+                        size: 48,
+                        color: AppColors.textHint,
+                      ),
+                    ),
+                    
+                    Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'ชื่อผู้เชี่ยวชาญ',
+                            style: AppTextStyles.bodyMedium.copyWith(
+                              fontWeight: FontWeight.w600,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            'คำอธิบายสั้นๆ',
+                            style: AppTextStyles.caption,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildInterestingSection(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Section Header
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'น่าสนใจ',
+                style: AppTextStyles.heading5.copyWith(
+                  color: AppColors.textPrimary,
+                ),
+              ),
+              TextButton(
+                onPressed: () {},
+                child: Text(
+                  'เพิ่มเติม',
+                  style: AppTextStyles.bodySmall.copyWith(
+                    color: AppColors.primary,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        
+        const SizedBox(height: 12),
+        
+        // Cards Grid
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Row(
+            children: [
+              Expanded(
+                child: _buildInterestingCard(
+                  'จัดอันดับการบริจาค',
+                  'สังคม ผู้สูงอายุ',
+                  '85%',
+                  '99%',
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _buildInterestingCard(
+                  'จัดอันดับการบริจาค',
+                  'สังคม ผู้สูงอายุ',
+                  '85%',
+                  '99%',
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildInterestingCard(
+    String title,
+    String subtitle,
+    String value1,
+    String value2,
+  ) {
+    return Container(
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
             color: AppColors.shadow,
-            blurRadius: 8,
+            blurRadius: 4,
             offset: const Offset(0, 2),
           ),
         ],
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Gold Member
-          TlzMenuItem(
-            title: 'สมัคร Gold Member',
-            icon: Icons.workspace_premium,
-            iconColor: AppColors.accent,
-            onTap: () {
-              _showComingSoon(context, 'สมัคร Gold Member');
-            },
+          // Icon - Very Pale Mint Green Circle
+          Container(
+            width: 48,
+            height: 48,
+            decoration: BoxDecoration(
+              color: AppColors.background, // Very pale mint green #EBF5E0
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(
+              Icons.trending_up,
+              color: AppColors.textPrimary, // สีดำตาม design
+              size: 24,
+            ),
           ),
           
-          // Location / Navigation
-          TlzMenuItem(
-            title: 'ที่อยู่ / นำทาง',
-            icon: Icons.location_on,
-            iconColor: AppColors.error,
-            onTap: () {
-              _showComingSoon(context, 'ที่อยู่ / นำทาง');
-            },
+          const SizedBox(height: 12),
+          
+          // Title
+          Text(
+            title,
+            style: AppTextStyles.bodyMedium.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
           ),
           
-          // Careers
-          TlzMenuItem(
-            title: 'ร่วมงานกับเรา',
-            icon: Icons.work,
-            iconColor: AppColors.info,
-            onTap: () {
-              _showComingSoon(context, 'ร่วมงานกับเรา');
-            },
+          const SizedBox(height: 4),
+          
+          // Subtitle
+          Text(
+            subtitle,
+            style: AppTextStyles.caption,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
           
-          // Admin
-          TlzMenuItem(
-            title: 'Admin',
-            icon: Icons.admin_panel_settings,
-            iconColor: AppColors.textSecondary,
-            showArrow: true,
-            onTap: () {
-              _showComingSoon(context, 'Admin Dashboard');
-            },
+          const SizedBox(height: 8),
+          
+          // Values
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                value1,
+                style: AppTextStyles.bodyLarge.copyWith(
+                  color: AppColors.primary,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                value2,
+                style: AppTextStyles.bodyLarge.copyWith(
+                  color: AppColors.success,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
           ),
         ],
       ),
     );
   }
+}
 
-  void _showComingSoon(BuildContext context, String feature) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('$feature - เร็วๆ นี้!'),
-        backgroundColor: AppColors.primary,
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-        margin: const EdgeInsets.all(16),
-        duration: const Duration(seconds: 2),
-      ),
-    );
+/// Custom Painter for Dotted Circle Border
+class DottedCirclePainter extends CustomPainter {
+  final Color color;
+  final double strokeWidth;
+  final double dashWidth;
+  final double dashSpace;
+
+  DottedCirclePainter({
+    required this.color,
+    this.strokeWidth = 3.0,
+    this.dashWidth = 8.0,
+    this.dashSpace = 4.0,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = strokeWidth
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round;
+
+    final center = Offset(size.width / 2, size.height / 2);
+    final radius = (size.width - strokeWidth) / 2;
+
+    // Draw dotted circle
+    final path = Path();
+    final circumference = 2 * math.pi * radius;
+    final dashLength = dashWidth;
+    final gapLength = dashSpace;
+    final totalLength = dashLength + gapLength;
+    final segments = (circumference / totalLength).floor();
+    final angleStep = (2 * math.pi) / segments;
+
+    for (int i = 0; i < segments; i++) {
+      final startAngle = i * angleStep;
+      final endAngle = startAngle + (dashLength / radius);
+      
+      path.addArc(
+        Rect.fromCircle(center: center, radius: radius),
+        startAngle,
+        endAngle - startAngle,
+      );
+    }
+
+    canvas.drawPath(path, paint);
   }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
