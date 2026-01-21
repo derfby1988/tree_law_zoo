@@ -1,5 +1,8 @@
 import 'dart:math' as math;
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_text_styles.dart';
 import '../../../../shared/widgets/widgets.dart';
@@ -14,45 +17,114 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.background,
       drawer: const TlzDrawer(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.pushNamed(context, '/test');
+        },
+        backgroundColor: AppColors.primary,
+        child: const Icon(
+          Icons.bug_report,
+          color: AppColors.textOnPrimary,
+        ),
+        tooltip: 'ทดสอบ WebSocket',
+      ),
       body: SafeArea(
         child: Column(
           children: [
             // Header with Search Bar
             _buildHeader(context),
             
-            // Main Content
+            // Main Content with Map Background
             Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    const SizedBox(height: 16),
-                    
-                    // Consultation Widget
-                    _buildConsultationWidget(context),
-                    
-                    const SizedBox(height: 24),
-                    
-                    // Pharmacy Near You Card
-                    _buildPharmacyCard(context),
-                    
-                    const SizedBox(height: 24),
-                    
-                    // Recommended by Experts Section
-                    _buildRecommendedSection(context),
-                    
-                    const SizedBox(height: 24),
-                    
-                    // Interesting Section
-                    _buildInterestingSection(context),
-                    
-                    const SizedBox(height: 32),
-                  ],
+              child: ClipRect(
+                child: SingleChildScrollView(
+                  child: Stack(
+                    children: [
+                      // Map Background - แสดงจากด้านบนลงมาจนถึงครึ่งของ Pharmacy Card
+                      // ตำแหน่ง: SizedBox(16) + Consultation Widget(280) + SizedBox(24) + Pharmacy Card half(80) = 400px
+                      Positioned(
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        height: 400, // จากด้านบนลงมาจนถึงครึ่งของ Pharmacy Card
+                        child: _buildMapBackground(),
+                      ),
+                      
+                      // Content Layer
+                      Column(
+                        children: [
+                          const SizedBox(height: 16),
+                          
+                          // Consultation Widget
+                          _buildConsultationWidget(context),
+                          
+                          const SizedBox(height: 24),
+                          
+                          // Pharmacy Near You Card
+                          _buildPharmacyCard(context),
+                          
+                          const SizedBox(height: 24),
+                          
+                          // Recommended by Experts Section
+                          _buildRecommendedSection(context),
+                          
+                          const SizedBox(height: 24),
+                          
+                          // Interesting Section
+                          _buildInterestingSection(context),
+                          
+                          const SizedBox(height: 32),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildMapBackground() {
+    // ตำแหน่งเริ่มต้น: กรุงเทพมหานคร
+    const initialLocation = LatLng(13.7563, 100.5018);
+    
+    return Stack(
+      fit: StackFit.expand, // ให้ Stack ขยายเต็มพื้นที่
+      children: [
+        // Map with Blur Effect
+        ClipRect(
+          child: ImageFiltered(
+            imageFilter: ui.ImageFilter.blur(sigmaX: 2.0, sigmaY: 2.0), // ลด blur effect มากๆ เพื่อให้เห็นแผนที่ชัดเจน
+            child: FlutterMap(
+              options: MapOptions(
+                initialCenter: initialLocation,
+                initialZoom: 13.0,
+                minZoom: 10.0,
+                maxZoom: 18.0,
+                interactionOptions: const InteractionOptions(
+                  flags: InteractiveFlag.none, // ปิดการโต้ตอบกับแผนที่ (เป็นแค่พื้นหลัง)
+                ),
+              ),
+              children: [
+                TileLayer(
+                  urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                  userAgentPackageName: 'com.example.tree_law_zoo',
+                  maxZoom: 19,
+                ),
+              ],
+            ),
+          ),
+        ),
+        // Overlay สีเพื่อให้แผนที่ดูเบาลงและเข้ากับธีม
+        Container(
+          decoration: BoxDecoration(
+            color: AppColors.background.withOpacity(0.05), // ลด opacity มากๆ เพื่อให้เห็นแผนที่ชัดเจนมาก
+          ),
+        ),
+      ],
     );
   }
 
@@ -702,8 +774,8 @@ class DottedCirclePainter extends CustomPainter {
     final center = Offset(size.width / 2, size.height / 2);
     final radius = (size.width - strokeWidth) / 2;
 
-    // Draw dotted circle
-    final path = Path();
+    // Draw dotted circle - ใช้ ui.Path เพื่อหลีกเลี่ยง conflict กับ latlong2.Path
+    final path = ui.Path();
     final circumference = 2 * math.pi * radius;
     final dashLength = dashWidth;
     final gapLength = dashSpace;

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'core/theme/app_theme.dart';
 import 'core/widgets/iphone_16_pro_wrapper.dart';
 import 'features/home/presentation/pages/home_page.dart';
+import 'services/test_websocket.dart';
 // import 'services/supabase_service.dart';
 
 void main() async {
@@ -41,6 +42,9 @@ class TreeLawZooApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       home: const HomePage(),
+      routes: {
+        '/test': (context) => const TestWebSocketWidget(),
+      },
     );
   }
 }
