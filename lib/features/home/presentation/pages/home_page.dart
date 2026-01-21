@@ -13,6 +13,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
+      drawer: const TlzDrawer(),
       body: SafeArea(
         child: Column(
           children: [
@@ -72,9 +73,7 @@ class HomePage extends StatelessWidget {
           // Top Navigation Bar
           TlzAppTopBar(
             notificationCount: 1,
-            onMenuPressed: () {
-              // Navigation logic handled by TlzHamburgerMenu
-            },
+            // onMenuPressed: null → ใช้ default behavior เพื่อเปิด Drawer
             onQRTap: () {
               // TODO: Navigate to QR scanner
             },

@@ -40,12 +40,6 @@ class TreeLawZooApp extends StatelessWidget {
       title: 'Tree Law Zoo',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
-      builder: (context, child) {
-        // Wrap all pages with iPhone 16 Pro size wrapper
-        return IPhone16ProWrapper(
-          child: child ?? const SizedBox(),
-        );
-      },
       home: const HomePage(),
     );
   }

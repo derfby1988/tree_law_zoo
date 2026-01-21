@@ -16,48 +16,57 @@ class TlzHamburgerMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Builder(
-      builder: (builderContext) => GestureDetector(
-        onTap: onPressed ??
-            () {
-              try {
-                Scaffold.of(scaffoldContext ?? builderContext).openDrawer();
-              } catch (e) {
-                // Drawer ยังไม่ได้สร้าง
-                debugPrint('Drawer not available: $e');
-              }
-            },
-        child: Container(
-          width: 29,
-          height: 20,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                width: 23,
-                height: 2.5,
-                decoration: BoxDecoration(
-                  color: AppColors.textOnPrimary,
-                  borderRadius: BorderRadius.circular(1.5),
-                ),
+      builder: (builderContext) => Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onPressed ??
+              () {
+                try {
+                  Scaffold.of(scaffoldContext ?? builderContext).openDrawer();
+                } catch (e) {
+                  // Drawer ยังไม่ได้สร้าง
+                  debugPrint('Drawer not available: $e');
+                }
+              },
+          borderRadius: BorderRadius.circular(8),
+          // เพิ่ม padding เพื่อให้พื้นที่กดใหญ่ขึ้น (48x48 = ขนาดที่แนะนำสำหรับ touch target)
+          child: Padding(
+            padding: const EdgeInsets.all(16.0), // เพิ่ม padding ให้มากขึ้น
+            child: Container(
+              width: 29,
+              height: 20,
+              alignment: Alignment.centerLeft,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    width: 23,
+                    height: 2.5,
+                    decoration: BoxDecoration(
+                      color: AppColors.textOnPrimary,
+                      borderRadius: BorderRadius.circular(1.5),
+                    ),
+                  ),
+                  Container(
+                    width: 29,
+                    height: 2.5,
+                    decoration: BoxDecoration(
+                      color: AppColors.accent, // สีส้ม-เหลือง
+                      borderRadius: BorderRadius.circular(1.5),
+                    ),
+                  ),
+                  Container(
+                    width: 12.5,
+                    height: 2.5,
+                    decoration: BoxDecoration(
+                      color: AppColors.textOnPrimary,
+                      borderRadius: BorderRadius.circular(1.5),
+                    ),
+                  ),
+                ],
               ),
-              Container(
-                width: 29,
-                height: 2.5,
-                decoration: BoxDecoration(
-                  color: AppColors.accent, // สีส้ม-เหลือง
-                  borderRadius: BorderRadius.circular(1.5),
-                ),
-              ),
-              Container(
-                width: 12.5,
-                height: 2.5,
-                decoration: BoxDecoration(
-                  color: AppColors.textOnPrimary,
-                  borderRadius: BorderRadius.circular(1.5),
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       ),
