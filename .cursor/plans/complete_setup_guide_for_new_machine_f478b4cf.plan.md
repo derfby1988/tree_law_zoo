@@ -1,30 +1,3 @@
----
-name: Complete Setup Guide for New Machine
-overview: สร้างคู่มือการตั้งค่าครบถ้วนสำหรับเครื่องใหม่ที่ clone repository จาก GitHub รวม Flutter app, WebSocket server, Database, และ dependencies ทั้งหมด
-todos:
-  - id: create_setup_guide
-    content: สร้างไฟล์ SETUP_NEW_MACHINE.md ที่มีคู่มือการ setup ครบถ้วน
-    status: pending
-  - id: create_quick_start_script
-    content: สร้างไฟล์ setup-new-machine.sh สำหรับ automation (macOS)
-    status: pending
-  - id: update_gitignore
-    content: ตรวจสอบและอัปเดต .gitignore ให้รวม .env files
-    status: pending
-  - id: create_env_template
-    content: สร้างไฟล์ .env.example เป็น template สำหรับ WebSocket server (รวม remote database config)
-    status: pending
-  - id: create_db_server_setup_guide
-    content: สร้างไฟล์ SETUP_DATABASE_SERVER.md สำหรับคู่มือตั้งค่า Database Server
-    status: pending
-  - id: create_remote_db_test_script
-    content: สร้าง script สำหรับทดสอบ remote database connection
-    status: pending
-  - id: update_readme
-    content: อัปเดต README.md ให้มี link ไปยัง SETUP_NEW_MACHINE.md
-    status: pending
----
-
 # คู่มือการตั้งค่าเครื่องใหม่ (Setup Guide for New Machine)
 
 ## ภาพรวม

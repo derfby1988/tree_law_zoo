@@ -1,0 +1,51 @@
+# Tree Law Zoo - Primary Machine Configuration
+# เครื่องนี้คือเครื่องหลัก (Primary Machine)
+
+## Machine Information
+- **Machine Type**: Primary Machine (เครื่องหลัก)
+- **Machine Name**: Mac mini (dave_macmini)
+- **OS**: macOS 26.2 (darwin-arm64)
+- **Shell**: /bin/zsh
+
+## Project Information
+- **Project Name**: Tree Law Zoo
+- **Project Path**: /Users/dave_macmini/tree_law_zoo
+- **GitHub Repository**: https://github.com/derfby1988/tree_law_zoo.git
+- **Framework**: Flutter 3.38.1
+
+## Development Environment
+- **Flutter Path**: /Users/dave_macmini/flutter
+- **Flutter Version**: 3.38.1 (stable)
+- **Dart Version**: 3.10.0
+- **Android SDK**: /Users/dave_macmini/Library/Android/sdk
+- **Xcode**: 26.2 (Build 17C52)
+
+## Git Configuration
+- **User Name**: derfby1988
+- **User Email**: apisek.pu@gmail.com
+- **Default Branch**: main
+
+## Available Devices
+- **Android Physical**: SM X135G (R8YYA0G5S6J) - Android 16 (API 36)
+- **Android Emulator**: sdk gphone64 arm64 (emulator-5554) - Android 16 (API 36)
+- **iOS Simulator**: iPhone 16e (B2BA42EB-3B50-4BBE-B54D-C06A88C58E20) - iOS 26.2
+- **Web**: Chrome 144.0.7559.59
+
+## Important Notes
+- เครื่องนี้เป็นเครื่องหลักสำหรับพัฒนา Tree Law Zoo
+- Flutter binary อาจมี quarantine attributes ที่ต้องแก้ด้วย `sudo xattr -cr /Users/dave_macmini/flutter/`
+- สำหรับ Android build อาจต้องใช้ sudo เพื่อลบ quarantine attributes
+- iOS และ Web builds ทำงานได้ปกติโดยไม่ต้องแก้ไข
+
+## Project Structure
+- `lib/main.dart` - Entry point
+- `lib/core/` - Theme, constants, utils
+- `lib/features/` - Feature modules (auth, booking, home, order, queue)
+- `lib/services/` - Services (Supabase)
+- `lib/shared/` - Shared widgets and models
+
+## Development Guidelines
+- ใช้ feature-based architecture
+- สีหลัก: เขียวธรรมชาติ (#2E7D32) สำหรับป่า/ต้นไม้
+- ฟอนต์: Sarabun (Google Fonts) สำหรับภาษาไทย
+- Theme: โทนสีธรรมชาติ - ป่า ต้นไม้ น้ำตก
