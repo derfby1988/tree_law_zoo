@@ -19,7 +19,8 @@ class DrawerMenuItem {
 
 /// App Drawer Widget - Based on Med Design
 /// Side menu with curved green background
-class TlzDrawer extends StatelessWidget {
+/// รองรับการปัดไปทางซ้ายเพื่อปิด drawer พร้อม animation
+class TlzDrawer extends StatefulWidget {
   final VoidCallback? onClose;
   final VoidCallback? onLogout;
 
@@ -30,10 +31,103 @@ class TlzDrawer extends StatelessWidget {
   });
 
   @override
+  State<TlzDrawer> createState() => _TlzDrawerState();
+}
+
+class _TlzDrawerState extends State<TlzDrawer> with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<Offset> _slideAnimation;
+  late Animation<double> _fadeAnimation;
+  
+  // Threshold สำหรับการปัด (30% ของความกว้าง)
+  static const double _swipeThreshold = 0.3;
+  
+  @override
+  void initState() {
+    super.initState();
+    
+    // Initialize animation controller
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    );
+    
+    // Slide animation: เลื่อนไปทางซ้าย
+    _slideAnimation = Tween<Offset>(
+      begin: Offset.zero,
+      end: const Offset(-1.0, 0.0), // เลื่อนไปทางซ้ายเต็มความกว้าง
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeInOut,
+    ));
+    
+    // Fade animation: จางหายไป
+    _fadeAnimation = Tween<double>(
+      begin: 1.0,
+      end: 0.0,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeInOut,
+    ));
+  }
+  
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+  
+  void _closeDrawer() {
+    if (widget.onClose != null) {
+      widget.onClose!();
+    } else {
+      Navigator.of(context).pop();
+    }
+  }
+  
+  void _handleSwipeEnd(DragEndDetails details) {
+    // ตรวจสอบความเร็วและระยะทางของการปัด
+    final velocity = details.velocity.pixelsPerSecond.dx;
+    final currentProgress = _animationController.value;
+    
+    // ถ้าปัดเร็วไปทางซ้าย (negative velocity) หรือปัดเกิน threshold (30%)
+    if (velocity < -500 || currentProgress > _swipeThreshold) {
+      // เริ่ม animation ปิด drawer
+      _animationController.forward().then((_) {
+        _closeDrawer();
+      });
+    } else {
+      // ถ้าไม่ถึง threshold ให้กลับมา
+      _animationController.reverse();
+    }
+  }
+  
+  void _handleSwipeUpdate(DragUpdateDetails details) {
+    // คำนวณระยะทางที่ปัด (เป็นเปอร์เซ็นต์ของความกว้างหน้าจอ)
+    final screenWidth = MediaQuery.of(context).size.width;
+    final delta = details.delta.dx;
+    
+    // คำนวณ progress ใหม่ (delta เป็นลบเมื่อปัดไปทางซ้าย)
+    final progressDelta = -delta / screenWidth; // เปลี่ยนเป็นบวกเมื่อปัดไปทางซ้าย
+    final currentProgress = _animationController.value;
+    final newProgress = (currentProgress + progressDelta).clamp(0.0, 1.0);
+    
+    // อัพเดท animation progress
+    _animationController.value = newProgress;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Drawer(
       backgroundColor: Colors.transparent,
-      child: Stack(
+      child: GestureDetector(
+        onHorizontalDragUpdate: _handleSwipeUpdate,
+        onHorizontalDragEnd: _handleSwipeEnd,
+        child: SlideTransition(
+          position: _slideAnimation,
+          child: FadeTransition(
+            opacity: _fadeAnimation,
+            child: Stack(
         children: [
           // White background
           Container(
@@ -61,7 +155,12 @@ class TlzDrawer extends StatelessWidget {
                   child: Align(
                     alignment: Alignment.topLeft,
                     child: GestureDetector(
-                      onTap: onClose ?? () => Navigator.of(context).pop(),
+                      onTap: () {
+                        // เริ่ม animation ปิด drawer
+                        _animationController.forward().then((_) {
+                          _closeDrawer();
+                        });
+                      },
                       child: Container(
                         width: 32,
                         height: 32,
@@ -228,7 +327,7 @@ class TlzDrawer extends StatelessWidget {
                     context,
                     title: 'ออกจากระบบ',
                     icon: Icons.logout,
-                    onTap: onLogout ?? () {
+                    onTap: widget.onLogout ?? () {
                       // TODO: Implement logout
                       debugPrint('Logout pressed');
                     },
@@ -238,6 +337,9 @@ class TlzDrawer extends StatelessWidget {
             ),
           ),
         ],
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -297,9 +399,12 @@ class TlzDrawer extends StatelessWidget {
   }
 
   void _navigateTo(BuildContext context, String route) {
-    Navigator.of(context).pop(); // Close drawer first
-    // TODO: Implement navigation
-    debugPrint('Navigate to: $route');
+    // เริ่ม animation ปิด drawer ก่อน navigate
+    _animationController.forward().then((_) {
+      Navigator.of(context).pop(); // Close drawer first
+      // TODO: Implement navigation
+      debugPrint('Navigate to: $route');
+    });
   }
 }
 
