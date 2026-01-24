@@ -9,14 +9,23 @@ import '../../../../shared/widgets/widgets.dart';
 
 /// Home Page - Medical App Design
 /// Main dashboard for health/medical services
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  double? _dragStartX;
+  bool _isDraggingFromLeft = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
       drawer: const TlzDrawer(),
+      drawerEnableOpenDragGesture: true, // เปิดใช้งานการปัดเพื่อเปิด drawer
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.pushNamed(context, '/test');
@@ -28,60 +37,83 @@ class HomePage extends StatelessWidget {
         ),
         tooltip: 'ทดสอบ WebSocket',
       ),
-      body: SafeArea(
-        child: Column(
-          children: [
-            // Header with Search Bar
-            _buildHeader(context),
-            
-            // Main Content with Map Background
-            Expanded(
-              child: ClipRect(
-                child: SingleChildScrollView(
-                  child: Stack(
-                    children: [
-                      // Map Background - แสดงจากด้านบนลงมาจนถึงครึ่งของ Pharmacy Card
-                      // ตำแหน่ง: SizedBox(16) + Consultation Widget(280) + SizedBox(24) + Pharmacy Card half(80) = 400px
-                      Positioned(
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        height: 400, // จากด้านบนลงมาจนถึงครึ่งของ Pharmacy Card
-                        child: _buildMapBackground(),
-                      ),
-                      
-                      // Content Layer
-                      Column(
+      body: Builder(
+        builder: (context) => GestureDetector(
+          // ตรวจสอบการปัดจากขอบซ้ายเพื่อเปิด drawer
+          behavior: HitTestBehavior.translucent,
+          onHorizontalDragStart: (details) {
+            if (details.globalPosition.dx < 30) {
+              setState(() {
+                _dragStartX = details.globalPosition.dx;
+                _isDraggingFromLeft = true;
+              });
+            } else {
+              setState(() {
+                _isDraggingFromLeft = false;
+              });
+            }
+          },
+          onHorizontalDragUpdate: (details) {
+            if (_isDraggingFromLeft && _dragStartX != null && details.globalPosition.dx > _dragStartX! + 50) {
+              Scaffold.of(context).openDrawer();
+              setState(() {
+                _isDraggingFromLeft = false;
+                _dragStartX = null;
+              });
+            }
+          },
+          onHorizontalDragEnd: (details) {
+            if (_isDraggingFromLeft && details.velocity.pixelsPerSecond.dx > 300) {
+              Scaffold.of(context).openDrawer();
+            }
+            setState(() {
+              _isDraggingFromLeft = false;
+              _dragStartX = null;
+            });
+          },
+          child: SafeArea(
+            child: Column(
+              children: [
+                // Header with Search Bar
+                _buildHeader(context),
+                
+                // Main Content with Map Background
+                Expanded(
+                  child: ClipRect(
+                    child: SingleChildScrollView(
+                      child: Stack(
                         children: [
-                          const SizedBox(height: 16),
+                          // Map Background
+                          Positioned(
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            height: 400,
+                            child: _buildMapBackground(),
+                          ),
                           
-                          // Consultation Widget
-                          _buildConsultationWidget(context),
-                          
-                          const SizedBox(height: 24),
-                          
-                          // Pharmacy Near You Card
-                          _buildPharmacyCard(context),
-                          
-                          const SizedBox(height: 24),
-                          
-                          // Recommended by Experts Section
-                          _buildRecommendedSection(context),
-                          
-                          const SizedBox(height: 24),
-                          
-                          // Interesting Section
-                          _buildInterestingSection(context),
-                          
-                          const SizedBox(height: 32),
+                          // Content Layer
+                          Column(
+                            children: [
+                              const SizedBox(height: 16),
+                              _buildConsultationWidget(context),
+                              const SizedBox(height: 24),
+                              _buildPharmacyCard(context),
+                              const SizedBox(height: 24),
+                              _buildRecommendedSection(context),
+                              const SizedBox(height: 24),
+                              _buildInterestingSection(context),
+                              const SizedBox(height: 32),
+                            ],
+                          ),
                         ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
-              ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

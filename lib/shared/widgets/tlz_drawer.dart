@@ -220,7 +220,7 @@ class _TlzDrawerState extends State<TlzDrawer> with SingleTickerProviderStateMix
                           ),
                           _buildMenuItem(
                             context,
-                            title: 'บทความ โดยผู้เชี่ยวชาญ',
+                            title: 'บทความเพื่อสุขภาพ',
                             icon: Icons.people_outline,
                             isUnderlined: true,
                             underlineText: 'บทความ',
@@ -234,7 +234,7 @@ class _TlzDrawerState extends State<TlzDrawer> with SingleTickerProviderStateMix
                           ),
                           _buildMenuItem(
                             context,
-                            title: 'โปรแกรมการดูแล',
+                            title: 'โปรแกรมการรักษา',
                             icon: Icons.people_outline,
                             onTap: () => _navigateTo(context, '/care-programs'),
                           ),
@@ -246,7 +246,7 @@ class _TlzDrawerState extends State<TlzDrawer> with SingleTickerProviderStateMix
                           // Section 2: Community
                           _buildMenuItem(
                             context,
-                            title: 'แจ้ง เหตุ / ข่าวสาร',
+                            title: 'แจ้งเหตุ/ร้องเรียน',
                             icon: Icons.people_outline,
                             isUnderlined: true,
                             underlineText: 'แจ้ง',
