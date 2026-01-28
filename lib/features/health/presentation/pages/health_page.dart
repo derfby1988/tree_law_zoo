@@ -449,62 +449,107 @@ class _HealthPageState extends State<HealthPage> {
   }
 
   /// Bottom Tabs - รูปทรงสี่เหลี่ยมจัตุรัส
+  /// ในแนวนอนจะไม่ขยายเต็มพื้นที่เพื่อไม่ให้บดบัง Expanded
   Widget _buildBottomTabs(BuildContext context) {
+    final isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+    final screenWidth = MediaQuery.of(context).size.width;
+    
+    // ในแนวนอน จำกัดความกว้างไม่เกิน 50% ของหน้าจอ
+    final maxWidth = isLandscape ? screenWidth * 0.5 : double.infinity;
+    
+    Widget tabsContent = Row(
+      mainAxisSize: isLandscape ? MainAxisSize.min : MainAxisSize.max,
+      children: List.generate(_tabs.length, (index) {
+        return isLandscape
+          ? _buildTabItem(index) // ขนาดคงที่ในแนวนอน
+          : Expanded(child: _buildTabItem(index)); // ขยายเต็มในแนวตั้ง
+      }),
+    );
+    
+    if (isLandscape) {
+      return Center(
+        child: Container(
+          constraints: BoxConstraints(maxWidth: maxWidth),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: tabsContent,
+        ),
+      );
+    }
+    
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Row(
-        children: List.generate(_tabs.length, (index) {
-          return Expanded(
-            child: GestureDetector(
-              onTap: () {
-                setState(() {
-                  _selectedTabIndex = index;
-                });
-              },
-              child: Padding(
-                padding: EdgeInsets.only(
-                  left: index == 0 ? 0 : 6,
-                  right: index == _tabs.length - 1 ? 0 : 6,
-                ),
-                child: Column(
-                  children: [
-                    // Tab Icon/Image placeholder - สี่เหลี่ยมจัตุรัส
-                    AspectRatio(
-                      aspectRatio: 1, // สี่เหลี่ยมจัตุรัส (1:1)
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(16),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.05),
-                              blurRadius: 4,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
+      child: tabsContent,
+    );
+  }
+  
+  /// Tab Item Widget
+  Widget _buildTabItem(int index) {
+    final isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+    
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _selectedTabIndex = index;
+        });
+      },
+      child: Padding(
+        padding: EdgeInsets.only(
+          left: index == 0 ? 0 : 6,
+          right: index == _tabs.length - 1 ? 0 : 6,
+        ),
+        child: Column(
+          children: [
+            // Tab Icon/Image placeholder - สี่เหลี่ยมจัตุรัส
+            Container(
+              width: isLandscape ? 100 : null, // ขนาดคงที่ในแนวนอน
+              height: isLandscape ? 100 : null,
+              child: isLandscape
+                ? Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.05),
+                          blurRadius: 4,
+                          offset: const Offset(0, 2),
                         ),
+                      ],
+                    ),
+                  )
+                : AspectRatio(
+                    aspectRatio: 1, // สี่เหลี่ยมจัตุรัส (1:1)
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.05),
+                            blurRadius: 4,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
                       ),
                     ),
-                    const SizedBox(height: 8),
-                    // Tab Label
-                    Text(
-                      _tabs[index],
-                      textAlign: TextAlign.center,
-                      style: AppTextStyles.caption.copyWith(
-                        color: _selectedTabIndex == index 
-                          ? AppColors.primary 
-                          : AppColors.textSecondary,
-                        fontWeight: _selectedTabIndex == index 
-                          ? FontWeight.bold 
-                          : FontWeight.normal,
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+            ),
+            const SizedBox(height: 8),
+            // Tab Label
+            Text(
+              _tabs[index],
+              textAlign: TextAlign.center,
+              style: AppTextStyles.caption.copyWith(
+                color: _selectedTabIndex == index 
+                  ? AppColors.primary 
+                  : AppColors.textSecondary,
+                fontWeight: _selectedTabIndex == index 
+                  ? FontWeight.bold 
+                  : FontWeight.normal,
               ),
             ),
-          );
-        }),
+          ],
+        ),
       ),
     );
   }

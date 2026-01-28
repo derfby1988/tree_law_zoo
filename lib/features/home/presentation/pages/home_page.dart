@@ -383,11 +383,17 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'สุขภาพ "ดี"',
-                  style: AppTextStyles.bodyLarge.copyWith(
-                    color: AppColors.textOnPrimary,
-                    fontWeight: FontWeight.w600,
+                // กดเพื่อไปหน้า Health
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamed(context, '/health');
+                  },
+                  child: Text(
+                    'สุขภาพ "ดี"',
+                    style: AppTextStyles.bodyLarge.copyWith(
+                      color: AppColors.textOnPrimary,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 12),
