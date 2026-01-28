@@ -621,91 +621,112 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   }
 
   Widget _buildPharmacyCard(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: AppColors.surface,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.shadow,
-              blurRadius: 8,
-              offset: const Offset(0, 2),
+    final isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+    final screenWidth = MediaQuery.of(context).size.width;
+    
+    // Card content
+    Widget cardContent = Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.shadow,
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          // Icon (สีดำตาม design)
+          Container(
+            width: 60,
+            height: 60,
+            decoration: BoxDecoration(
+              color: AppColors.background,
+              borderRadius: BorderRadius.circular(12),
             ),
-          ],
-        ),
-        child: Row(
-          children: [
-            // Icon (สีดำตาม design)
-            Container(
-              width: 60,
-              height: 60,
-              decoration: BoxDecoration(
-                color: AppColors.background,
+            child: const Icon(
+              Icons.local_pharmacy,
+              size: 32,
+              color: AppColors.textPrimary, // สีดำตาม design
+            ),
+          ),
+          
+          const SizedBox(width: 16),
+          
+          // Content
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'ร้านยาใกล้คุณ',
+                  style: AppTextStyles.heading5.copyWith(
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'จัดส่งภายใน 10 นาที',
+                  style: AppTextStyles.bodySmall.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'คลินิก / นวดสปา / ฟิสเนส',
+                  style: AppTextStyles.caption.copyWith(
+                    color: AppColors.textHint,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          
+          // Search Button
+          ElevatedButton(
+            onPressed: () {},
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.surface,
+              foregroundColor: AppColors.primary,
+              side: const BorderSide(color: AppColors.border),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: const Icon(
-                Icons.local_pharmacy,
-                size: 32,
-                color: AppColors.textPrimary, // สีดำตาม design
+            ),
+            child: Text(
+              'ค้นหา',
+              style: AppTextStyles.buttonSmall.copyWith(
+                color: AppColors.primary,
               ),
             ),
-            
-            const SizedBox(width: 16),
-            
-            // Content
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'ร้านยาใกล้คุณ',
-                    style: AppTextStyles.heading5.copyWith(
-                      color: AppColors.textPrimary,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'จัดส่งภายใน 10 นาที',
-                    style: AppTextStyles.bodySmall.copyWith(
-                      color: AppColors.textSecondary,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'คลินิก / นวดสปา / ฟิสเนส',
-                    style: AppTextStyles.caption.copyWith(
-                      color: AppColors.textHint,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            
-            // Search Button
-            ElevatedButton(
-              onPressed: () {},
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.surface,
-                foregroundColor: AppColors.primary,
-                side: const BorderSide(color: AppColors.border),
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              child: Text(
-                'ค้นหา',
-                style: AppTextStyles.buttonSmall.copyWith(
-                  color: AppColors.primary,
-                ),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
+    );
+    
+    // Wrap with width constraint for landscape
+    if (isLandscape) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Align(
+          alignment: Alignment.center,
+          child: SizedBox(
+            width: screenWidth * 0.5, // 50% ของความกว้างหน้าจอในแนวนอน
+            child: cardContent,
+          ),
+        ),
+      );
+    }
+    
+    // Portrait: full width
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: cardContent,
     );
   }
 
@@ -749,7 +770,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
             itemCount: 5,
             itemBuilder: (context, index) {
               return Container(
-                width: 160,
+                width: 300,
                 margin: const EdgeInsets.only(right: 12),
                 decoration: BoxDecoration(
                   color: AppColors.surface,
@@ -847,27 +868,31 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         
         const SizedBox(height: 12),
         
-        // Cards Grid
-        Padding(
+        // Cards Grid - Fixed width, horizontal scroll
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Row(
             children: [
-              Expanded(
-                child: _buildInterestingCard(
-                  'จัดอันดับการบริจาค',
-                  'สังคม ผู้สูงอายุ',
-                  '85%',
-                  '99%',
-                ),
+              _buildInterestingCard(
+                'จัดอันดับการบริจาค',
+                'สังคม ผู้สูงอายุ',
+                '85%',
+                '99%',
               ),
               const SizedBox(width: 12),
-              Expanded(
-                child: _buildInterestingCard(
-                  'จัดอันดับการบริจาค',
-                  'สังคม ผู้สูงอายุ',
-                  '85%',
-                  '99%',
-                ),
+              _buildInterestingCard(
+                'จัดอันดับการบริจาค',
+                'สังคม ผู้สูงอายุ',
+                '85%',
+                '99%',
+              ),
+              const SizedBox(width: 12),
+              _buildInterestingCard(
+                'อาสาสมัคร',
+                'ชุมชน สิ่งแวดล้อม',
+                '72%',
+                '88%',
               ),
             ],
           ),
@@ -883,6 +908,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     String value2,
   ) {
     return Container(
+      width: 160, // Fixed width - ขนาดคงที่ไม่ปรับตามหน้าจอ
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: AppColors.surface,
