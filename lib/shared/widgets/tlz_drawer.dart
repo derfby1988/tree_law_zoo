@@ -201,6 +201,17 @@ class _TlzDrawerState extends State<TlzDrawer> with SingleTickerProviderStateMix
                             onTap: () => _navigateTo(context, '/home'),
                           ),
                           
+                          // Health
+                          _buildMenuItem(
+                            context,
+                            title: 'สุขภาพ',
+                            icon: Icons.favorite_outline,
+                            onTap: () {
+                              Navigator.of(context).pop();
+                              Navigator.pushNamed(context, '/health');
+                            },
+                          ),
+                          
                           const SizedBox(height: 24),
                           
                           // Section 1: Medical Services
