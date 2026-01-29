@@ -346,17 +346,37 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
               )
             : null,
       ),
-      child: TlzAppTopBar(
+      child: TlzAppTopBar.onPrimary(
         notificationCount: 1,
+        searchHintText: 'ค้นหายา ร้านยา หมอ...',
         // onMenuPressed: null → ใช้ default behavior เพื่อเปิด Drawer
+        // onSearchTap: null → ใช้ default behavior เพื่อ navigate ไป SearchPage
         onQRTap: () {
           // TODO: Navigate to QR scanner
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('QR Scanner จะเปิดใช้งานเร็วๆ นี้'),
+              duration: Duration(seconds: 1),
+            ),
+          );
         },
         onNotificationTap: () {
           // TODO: Navigate to notifications
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('การแจ้งเตือนจะเปิดใช้งานเร็วๆ นี้'),
+              duration: Duration(seconds: 1),
+            ),
+          );
         },
         onCartTap: () {
           // TODO: Navigate to cart
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('ตะกร้าสินค้าจะเปิดใช้งานเร็วๆ นี้'),
+              duration: Duration(seconds: 1),
+            ),
+          );
         },
       ),
     );

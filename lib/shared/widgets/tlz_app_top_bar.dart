@@ -7,6 +7,7 @@ import 'tlz_cart_button.dart';
 
 /// App Top Bar Widget
 /// Reusable top navigation bar with hamburger menu, search bar, notification, and cart
+/// รองรับหลายธีมสีเพื่อใช้งานได้ทุกหน้า
 class TlzAppTopBar extends StatelessWidget {
   final VoidCallback? onMenuPressed;
   final VoidCallback? onSearchTap;
@@ -19,6 +20,12 @@ class TlzAppTopBar extends StatelessWidget {
   final int notificationCount;
   final int? cartItemCount;
   final bool searchEnabled;
+  
+  /// ธีมสีของ Search Bar
+  final TlzSearchBarColorTheme searchBarTheme;
+  
+  /// แสดงปุ่ม QR Scanner หรือไม่
+  final bool showQRButton;
 
   const TlzAppTopBar({
     super.key,
@@ -33,7 +40,77 @@ class TlzAppTopBar extends StatelessWidget {
     this.notificationCount = 0,
     this.cartItemCount,
     this.searchEnabled = false,
+    this.searchBarTheme = TlzSearchBarColorTheme.onPrimary,
+    this.showQRButton = true,
   });
+
+  /// สร้าง Top Bar สำหรับพื้นหลังสีเข้ม (primary)
+  factory TlzAppTopBar.onPrimary({
+    Key? key,
+    VoidCallback? onMenuPressed,
+    VoidCallback? onSearchTap,
+    VoidCallback? onQRTap,
+    VoidCallback? onNotificationTap,
+    VoidCallback? onCartTap,
+    ValueChanged<String>? onSearchChanged,
+    TextEditingController? searchController,
+    String? searchHintText,
+    int notificationCount = 0,
+    int? cartItemCount,
+    bool searchEnabled = false,
+    bool showQRButton = true,
+  }) {
+    return TlzAppTopBar(
+      key: key,
+      onMenuPressed: onMenuPressed,
+      onSearchTap: onSearchTap,
+      onQRTap: onQRTap,
+      onNotificationTap: onNotificationTap,
+      onCartTap: onCartTap,
+      onSearchChanged: onSearchChanged,
+      searchController: searchController,
+      searchHintText: searchHintText,
+      notificationCount: notificationCount,
+      cartItemCount: cartItemCount,
+      searchEnabled: searchEnabled,
+      searchBarTheme: TlzSearchBarColorTheme.onPrimary,
+      showQRButton: showQRButton,
+    );
+  }
+
+  /// สร้าง Top Bar สำหรับพื้นหลังสีอ่อน (light/white)
+  factory TlzAppTopBar.onLight({
+    Key? key,
+    VoidCallback? onMenuPressed,
+    VoidCallback? onSearchTap,
+    VoidCallback? onQRTap,
+    VoidCallback? onNotificationTap,
+    VoidCallback? onCartTap,
+    ValueChanged<String>? onSearchChanged,
+    TextEditingController? searchController,
+    String? searchHintText,
+    int notificationCount = 0,
+    int? cartItemCount,
+    bool searchEnabled = false,
+    bool showQRButton = true,
+  }) {
+    return TlzAppTopBar(
+      key: key,
+      onMenuPressed: onMenuPressed,
+      onSearchTap: onSearchTap,
+      onQRTap: onQRTap,
+      onNotificationTap: onNotificationTap,
+      onCartTap: onCartTap,
+      onSearchChanged: onSearchChanged,
+      searchController: searchController,
+      searchHintText: searchHintText,
+      notificationCount: notificationCount,
+      cartItemCount: cartItemCount,
+      searchEnabled: searchEnabled,
+      searchBarTheme: TlzSearchBarColorTheme.onLight,
+      showQRButton: showQRButton,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,11 +128,13 @@ class TlzAppTopBar extends StatelessWidget {
         Expanded(
           child: TlzSearchBar(
             hintText: searchHintText,
-            onSearchTap: onSearchTap,
+            onSearchTap: onSearchTap ?? () => _navigateToSearch(context),
             onQRTap: onQRTap,
             onChanged: onSearchChanged,
             controller: searchController,
             enabled: searchEnabled,
+            theme: searchBarTheme,
+            showQRButton: showQRButton,
           ),
         ),
         
@@ -75,6 +154,17 @@ class TlzAppTopBar extends StatelessWidget {
           onPressed: onCartTap,
         ),
       ],
+    );
+  }
+  
+  /// Navigate ไปหน้า Search โดยอัตโนมัติ
+  void _navigateToSearch(BuildContext context) {
+    Navigator.pushNamed(
+      context,
+      '/search',
+      arguments: {
+        'hintText': searchHintText,
+      },
     );
   }
 }
